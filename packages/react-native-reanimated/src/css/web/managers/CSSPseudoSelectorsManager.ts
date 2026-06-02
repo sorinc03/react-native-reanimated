@@ -8,11 +8,6 @@ import { insertPseudoSelectorCSS, removePseudoSelectorCSS } from '../domUtils';
 
 let pseudoSelectorCounter = 0;
 
-// CSS rules are injected in this order so that later rules override earlier ones
-// when multiple selectors are active simultaneously (last = highest priority).
-// This must match the native backend's merge priority (the PseudoSelector enum in
-// Common/cpp/reanimated/PseudoStyles/PseudoSelector.h):
-//   :focus-within < :focus < :hover < :active < :active-deepest
 const SELECTOR_ORDER: readonly PseudoSelectorKey[] = [
   ':focus-within',
   ':focus',
@@ -21,8 +16,6 @@ const SELECTOR_ORDER: readonly PseudoSelectorKey[] = [
   ':active-deepest',
 ];
 
-// Marker class added to every element that registers :active or :active-deepest
-// Used by the CSS :has() rule on :active-deepest elements
 const ACTIVE_MARKER = 'rps-active';
 
 export default class CSSPseudoSelectorsManager implements ICSSPseudoSelectorsManager {
@@ -62,8 +55,6 @@ export default class CSSPseudoSelectorsManager implements ICSSPseudoSelectorsMan
     const unknownSelectors = Object.keys(pseudoStylesBySelector).filter(
       (sel) => !(SELECTOR_ORDER as readonly string[]).includes(sel)
     );
-    // Known selectors first in defined priority order, unknown appended after.
-    // Unknown selectors are passed through as native CSS pseudo-selectors.
     const orderedSelectors = [...knownSelectors, ...unknownSelectors];
 
     const rules = orderedSelectors
@@ -73,8 +64,6 @@ export default class CSSPseudoSelectorsManager implements ICSSPseudoSelectorsMan
         if (!css) {
           return null;
         }
-        // Inline styles applied by RNW have higher specificity than class selectors,
-        // so !important is required for our pseudo-selector rules to win.
         const cssWithImportant = css
           .split('; ')
           .map((decl) => `${decl} !important`)
@@ -90,9 +79,6 @@ export default class CSSPseudoSelectorsManager implements ICSSPseudoSelectorsMan
 
     insertPseudoSelectorCSS(className, rules);
 
-    // When transitionDuration is set but transitionProperty was not explicitly
-    // specified, CSSTransitionsManager leaves transitionProperty as an empty
-    // string and the browser won't animate anything. Default to 'all'.
     if (
       !this.element.style.transitionProperty &&
       this.element.style.transitionDuration
