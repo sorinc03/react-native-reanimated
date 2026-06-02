@@ -38,32 +38,13 @@ type WebPseudoSelectorKey =
   | ':last-of-type'
   | ':only-of-type'
   | ':root'
-  | ':fullscreen';
+  | ':fullscreen'
+  | `:${'nth-child' | 'nth-last-child' | 'nth-of-type' | 'nth-last-of-type'}(${string})`;
 
-type DynamicWebPseudoSelectorKey =
-  `:${'nth-child' | 'nth-last-child' | 'nth-of-type' | 'nth-last-of-type'}(${string})`;
+export type PseudoSelectorKey = NativePseudoSelectorKey | WebPseudoSelectorKey;
 
-export type PseudoSelectorKey =
-  | NativePseudoSelectorKey
-  | WebPseudoSelectorKey
-  | DynamicWebPseudoSelectorKey;
-
-type PseudoSelectorStyles<T> = { default?: T } & {
+export type PseudoValue<T> = { default?: T } & {
   [K in PseudoSelectorKey]?: T;
 };
-
-type ConcretePseudoSelectorKey =
-  | 'default'
-  | NativePseudoSelectorKey
-  | WebPseudoSelectorKey;
-
-type RequireAtLeastOne<T, Keys extends keyof T> = {
-  [K in Keys]-?: Required<Pick<T, K>> & Partial<Omit<T, K>>;
-}[Keys];
-
-export type PseudoValue<T> = RequireAtLeastOne<
-  PseudoSelectorStyles<T>,
-  ConcretePseudoSelectorKey
->;
 
 export type CSSPseudoSelectorStyle = Partial<CSSStyle<PlainStyle>>;
