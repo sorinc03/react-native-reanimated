@@ -9,14 +9,16 @@ import { insertPseudoSelectorCSS, removePseudoSelectorCSS } from '../domUtils';
 let pseudoSelectorCounter = 0;
 
 // CSS rules are injected in this order so that later rules override earlier ones
-// when multiple selectors are active simultaneously (last = highest priority):
-// :focus-within < :focus < :hover < :active-deepest < :active
+// when multiple selectors are active simultaneously (last = highest priority).
+// This must match the native backend's merge priority (the PseudoSelector enum in
+// Common/cpp/reanimated/PseudoStyles/PseudoSelector.h):
+//   :focus-within < :focus < :hover < :active < :active-deepest
 const SELECTOR_ORDER: readonly PseudoSelectorKey[] = [
   ':focus-within',
   ':focus',
   ':hover',
-  ':active-deepest',
   ':active',
+  ':active-deepest',
 ];
 
 // Marker class added to every element that registers :active or :active-deepest
