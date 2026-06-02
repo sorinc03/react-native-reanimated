@@ -2,7 +2,6 @@
 import { convertPropertyToArray, type UnknownRecord } from '../../../common';
 import type { CSSTransitionProp, CSSTransitionProperties } from '../../types';
 import { parseSingleTransitionShorthand, splitByComma } from '../../utils';
-import { resolvePseudoKeyed } from '../../utils/guards';
 
 type ExpandedCSSTransitionConfigProperties = Record<
   Exclude<CSSTransitionProp, 'transition'>,
@@ -47,7 +46,7 @@ export function normalizeCSSTransitionProperties(
     : createEmptyTransitionConfig();
 
   for (const [key, value] of Object.entries(config)) {
-    result[key] = convertPropertyToArray(resolvePseudoKeyed(value));
+    result[key] = convertPropertyToArray(value);
   }
 
   return result as ExpandedCSSTransitionConfigProperties;

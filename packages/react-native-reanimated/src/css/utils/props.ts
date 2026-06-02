@@ -28,7 +28,6 @@ export function filterCSSAndStyleProperties<S extends object>(
   CSSTransitionProperties | null,
   PseudoStylesBySelector | null,
   PlainStyle,
-  PseudoStylesBySelector | null,
 ] {
   const animationProperties: Partial<CSSAnimationProperties> = {};
   let transitionProperties: Partial<CSSTransitionProperties> = {};
