@@ -1,8 +1,7 @@
 'use strict';
 import { webPropsBuilder } from '../../../common/web';
 import type { ReanimatedHTMLElement } from '../../../ReanimatedModule/js-reanimated';
-import type { ICSSPseudoSelectorsManager } from '../../types/interfaces';
-import type { PseudoSelectorKey } from '../../types/props';
+import type { PseudoSelectorKey } from '../../types/pseudo';
 import type { PseudoStylesBySelector } from '../../utils';
 import { insertPseudoSelectorCSS, removePseudoSelectorCSS } from '../domUtils';
 
@@ -18,7 +17,7 @@ const SELECTOR_ORDER: readonly PseudoSelectorKey[] = [
 
 const ACTIVE_MARKER = 'rps-active';
 
-export default class CSSPseudoSelectorsManager implements ICSSPseudoSelectorsManager {
+export default class CSSPseudoSelectorsManager {
   private readonly element: ReanimatedHTMLElement;
   private pseudoSelectorClassName: string | null = null;
 
